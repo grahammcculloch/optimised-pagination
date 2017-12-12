@@ -1,0 +1,13 @@
+# Virtual Environment
+venv/*
+
+# Build/compilation output
+*.pyc
+**/__pycache__/*
+
+# collectstatic output
+src/assets/*
+src/media/uploads/*
+
+# Local dev database
+*.sqlite3
