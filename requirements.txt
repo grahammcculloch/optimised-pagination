@@ -4,5 +4,6 @@ graphene-django==2.0.0
 attrs==17.3.0
 django-cursor-pagination==0.1.2
 django-debug-toolbar==1.9.1
+django-extensions==1.9.8
 
 
