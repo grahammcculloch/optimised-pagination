@@ -9,6 +9,7 @@ from django.db.models import Prefetch, QuerySet
 import attr
 import graphene
 from graphene.utils.str_converters import to_snake_case
+from graphene_django.filter import DjangoFilterConnectionField
 from cursor_pagination import CursorPaginator
 from graphql_relay import connection_from_list
 
@@ -158,18 +159,41 @@ def optimize_qs(connection_type, queryset, info=None, fields=None, post_processo
     return queryset, post_processors
 
 
-class CursorPaginatedConnectionField(graphene.Field):
+def apply_ordering(queryset, **kwargs):
+    """ Apply ordering to the queryset. 
+
+        The 'orderBy' kwarg is used - if defined;
+        otherwise the model's 'ordering' meta field is used - if defined;
+        otherwise we default to ordering by descending id
+    """
+    if 'orderBy' in kwargs:
+        order_by_field = kwargs.get('orderBy')
+        # CursorPaginator requires all order_by fields to be in the same direction and the
+        # data must be ordered by fields which are unique across all records.
+        id_order = '-id' if order_by_field.startswith('-') else 'id'
+        return queryset.order_by(order_by_field, id_order)
+    elif queryset.model._meta.ordering:
+        id_order = '-id' if queryset.model._meta.ordering[0].startswith(
+            '-') else 'id'
+        return queryset.order_by(*queryset.model._meta.ordering, id_order)
+    else:
+        return queryset.order_by('-id')
+
+
+class CursorPaginatedConnectionField(DjangoFilterConnectionField):
     def __init__(self, *args, **kwargs):
         kwargs['resolver'] = self.cursor_resolver
         kwargs.setdefault('before', graphene.String())
         kwargs.setdefault('after', graphene.String())
         kwargs.setdefault('first', graphene.Int())
         kwargs.setdefault('last', graphene.Int())
+        kwargs.setdefault('orderBy', graphene.String())
         super().__init__(*args, **kwargs)
 
-    def cursor_resolver(self, instance, info, parent_resolver=None, before=None, after=None, first=None, last=None):
+    def cursor_resolver(self, instance, info, parent_resolver=None, before=None, after=None, first=None, last=None, **kwargs):
         if parent_resolver:
-            qs = parent_resolver(instance, info)
+            qs = parent_resolver(instance, info, **kwargs)
+            qs = apply_ordering(qs, **kwargs)
         else:
             qs = instance.items
         if isinstance(qs, self.type):
@@ -177,6 +201,16 @@ class CursorPaginatedConnectionField(graphene.Field):
         page_query = PageQuery(
             before=before, after=after, first=first, last=last)
         queryset, post_processors = optimize_qs(self.type, qs, info)
+
+        # Filtering - copied from DjangoFilterConnectionField.connection_resolver
+        filter_kwargs = {k: v for k,
+                         v in kwargs.items() if k in self.filtering_args}
+        queryset = self.filterset_class(
+            data=filter_kwargs,
+            queryset=queryset,
+        ).qs
+        # End of filtering
+
         if isinstance(qs, list):
             connection = connection_from_list(
                 queryset,
