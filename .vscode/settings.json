@@ -4,5 +4,18 @@
   "python.autoComplete.extraPaths": [
     "${workspaceRoot}/venv/Lib/site-packages",
     "${workspaceRoot}/src/frontend/js"
-  ]
+  ],
+  "files.exclude": {
+    "**/__pycache__": true,
+    "node_modules": true,
+    ".vscode": true,
+    "venv": true,
+    "**/.pyc": true,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "flow-typed": true
+  }
 }

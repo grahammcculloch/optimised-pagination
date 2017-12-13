@@ -1,1 +1,54 @@
-[{"model": "blog.author", "pk": 1, "fields": {"first_name": "Adam", "last_name": "One"}}, {"model": "blog.author", "pk": 2, "fields": {"first_name": "Ben", "last_name": "Two"}}, {"model": "blog.category", "pk": 1, "fields": {"name": "Sports"}}, {"model": "blog.category", "pk": 2, "fields": {"name": "Music"}}, {"model": "blog.entry", "pk": 1, "fields": {"author": 1, "category": 1, "title": "A great game", "content": "Some content"}}, {"model": "blog.entry", "pk": 2, "fields": {"author": 1, "category": 2, "title": "A great tune", "content": "Some other content"}}, {"model": "blog.entry", "pk": 3, "fields": {"author": 2, "category": 1, "title": "An even better game", "content": "More content"}}, {"model": "blog.entry", "pk": 4, "fields": {"author": 2, "category": 2, "title": "Not a great tune", "content": "Content!"}}]
+[
+  {
+    "model": "blog.author",
+    "pk": 1,
+    "fields": { "first_name": "Adam", "last_name": "One" }
+  },
+  {
+    "model": "blog.author",
+    "pk": 2,
+    "fields": { "first_name": "Ben", "last_name": "Two" }
+  },
+  { "model": "blog.category", "pk": 1, "fields": { "name": "Sports" } },
+  { "model": "blog.category", "pk": 2, "fields": { "name": "Music" } },
+  {
+    "model": "blog.entry",
+    "pk": 1,
+    "fields": {
+      "author": 1,
+      "category": 1,
+      "title": "A great game",
+      "content": "Some content"
+    }
+  },
+  {
+    "model": "blog.entry",
+    "pk": 2,
+    "fields": {
+      "author": 1,
+      "category": 2,
+      "title": "A great tune",
+      "content": "Some other content"
+    }
+  },
+  {
+    "model": "blog.entry",
+    "pk": 3,
+    "fields": {
+      "author": 2,
+      "category": 1,
+      "title": "An even better game",
+      "content": "More content"
+    }
+  },
+  {
+    "model": "blog.entry",
+    "pk": 4,
+    "fields": {
+      "author": 2,
+      "category": 2,
+      "title": "Not a great tune",
+      "content": "Content!"
+    }
+  }
+]
