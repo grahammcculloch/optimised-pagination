@@ -1,6 +1,11 @@
 
 from django.contrib import admin
-from .models import Author, Category, Entry
+from .models import Author, Category, Entry, Tag
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('__str__',)
 
 
 @admin.register(Author)
