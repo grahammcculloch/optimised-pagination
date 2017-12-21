@@ -80,6 +80,14 @@ def get_fields(asts, resolve_info):
 
 
 def get_node_type(field):
+    # Nullable foreign key fields are accessed directly from the
+    # field.get_type().type property
+    try:
+        if hasattr(field.get_type().type._meta, 'model'):
+            return field.get_type().type
+    except:
+        pass
+    # Non-nullable foreign keys are wrapped in a 'NonNull' object with an 'of_type' property
     try:
         return field.get_type().type.of_type
     except AttributeError:
