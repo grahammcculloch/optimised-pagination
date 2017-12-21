@@ -139,3 +139,9 @@ GRAPHENE = {
         'graphene_django.debug.DjangoDebugMiddleware',
     ]
 }
+
+GRAPHENE_DJANGO_EXTRAS = {
+    'DEFAULT_PAGINATION_CLASS': 'graphene_django_extras.paginations.PageGraphqlPagination',
+    'DEFAULT_PAGE_SIZE': 20,
+    'MAX_PAGE_SIZE': 50,
+}
